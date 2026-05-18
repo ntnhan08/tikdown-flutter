@@ -1,0 +1,39 @@
+name: tikdown
+description: TikDown - Tai video nhanh chong va de dang
+publish_to: 'none'
+version: 2.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: '>=3.22.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # WebView mạnh nhất cho Flutter
+  flutter_inappwebview: ^6.1.5
+
+  # Kiểm tra mạng
+  connectivity_plus: ^6.0.5
+
+  # Quyền hạn
+  permission_handler: ^11.3.1
+
+  # Download file
+  dio: ^5.7.0
+  path_provider: ^2.1.4
+
+  # Mở link ngoài
+  url_launcher: ^6.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
