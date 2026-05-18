@@ -16,7 +16,7 @@ dependencies:
   flutter_inappwebview: ^6.0.0
 
   # Kiểm tra mạng
-  connectivity_plus: ^3.0.0
+  connectivity_plus: ^4.0.0
 
   # Quyền hạn
   permission_handler: ^11.3.1
