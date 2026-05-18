@@ -52,7 +52,7 @@ class _WebViewScreenState extends State<WebViewScreen>
       settings: PullToRefreshSettings(
         color: AppTheme.primary,
         backgroundColor: Colors.transparent,
-        attributedTitle: AttributedString(text: 'Dang lam moi...'),
+
       ),
       onRefresh: () async {
         if (await _isOnline()) {
@@ -130,8 +130,6 @@ class _WebViewScreenState extends State<WebViewScreen>
 
                   onWebViewCreated: (ctrl) {
                     _webViewController = ctrl;
-                    CookieManager.instance()
-                        .acceptThirdPartyCookies(webViewController: ctrl, accept: false);
                   },
 
                   onLoadStart: (ctrl, url) {
@@ -455,8 +453,7 @@ class _WebViewScreenState extends State<WebViewScreen>
 
   Future<bool> _isOnline() async {
     final result = await Connectivity().checkConnectivity();
-    return result.isNotEmpty &&
-        !result.contains(ConnectivityResult.none);
+    return result != ConnectivityResult.none;
   }
 
   bool _isOnlineSync() => true; // Optimistic; actual check async
@@ -466,8 +463,6 @@ class _WebViewScreenState extends State<WebViewScreen>
   String _resolveError(WebResourceErrorType? type) {
     if (type == WebResourceErrorType.HOST_LOOKUP) {
       return 'Khong tim thay may chu.\nKiem tra ket noi mang.';
-    } else if (type == WebResourceErrorType.CONNECT) {
-      return 'Khong the ket noi toi may chu.\nMay chu co the dang offline.';
     } else if (type == WebResourceErrorType.TIMEOUT) {
       return 'Ket noi qua thoi gian cho.\nVui long thu lai.';
     } else if (type == WebResourceErrorType.FAILED_SSL_HANDSHAKE) {
