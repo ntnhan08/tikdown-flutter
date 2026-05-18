@@ -1,14 +1,13 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
-    // Flutter Gradle Plugin must be applied after Android and Kotlin plugins
     id "dev.flutter.flutter-gradle-plugin"
 }
 
 android {
     namespace "com.tikdown.app"
-    compileSdk flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    compileSdk 34
+    ndkVersion "25.1.8937393"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -25,10 +24,10 @@ android {
 
     defaultConfig {
         applicationId "com.tikdown.app"
-        minSdk 26                         // Android 8.0+
-        targetSdk flutter.targetSdkVersion
-        versionCode flutter.versionCode
-        versionName flutter.versionName
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "2.0.0"
         multiDexEnabled true
     }
 
@@ -38,7 +37,6 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
                           'proguard-rules.pro'
-            // Use debug signing for now; replace with keystore for production
             signingConfig signingConfigs.debug
         }
         debug {
