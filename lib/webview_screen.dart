@@ -455,7 +455,8 @@ class _WebViewScreenState extends State<WebViewScreen>
 
   Future<bool> _isOnline() async {
     final result = await Connectivity().checkConnectivity();
-    return result != ConnectivityResult.none;
+    return result.isNotEmpty &&
+        !result.contains(ConnectivityResult.none);
   }
 
   bool _isOnlineSync() => true; // Optimistic; actual check async
