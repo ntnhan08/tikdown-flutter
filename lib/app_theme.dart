@@ -21,11 +21,11 @@ class AppTheme {
     colors: [primary, accentYellow, accentPink],
   );
 
-  static const LinearGradient splashBg = RadialGradient(
+  static const RadialGradient splashBg = RadialGradient(
     center: Alignment.center,
     radius: 1.2,
     colors: [Color(0xFF1A0A2E), Color(0xFF0D0D1A)],
-  ) as LinearGradient;
+  );
 
   static const List<Color> particleColors = [
     Color(0xCCFF6B35), Color(0xCCFF4757), Color(0xCCFFAA00),
