@@ -1,0 +1,94 @@
+name: Build TikDown APK
+
+# Trigger: mỗi khi push code lên branch main
+on:
+  push:
+    branches: [ main, master ]
+  # Hoặc chạy thủ công từ tab Actions
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Flutter APK
+    runs-on: ubuntu-latest  # Máy chủ Linux miễn phí của GitHub
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Cài Java 17 (Flutter yêu cầu)
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # 3. Cài Flutter SDK
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0'
+          channel: 'stable'
+          cache: true  # Cache Flutter để lần sau build nhanh hơn
+
+      # 4. Kiểm tra môi trường
+      - name: Flutter doctor
+        run: flutter doctor -v
+
+      # 5. Cài packages (pub get)
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 6. Phân tích code (tùy chọn)
+      - name: Analyze code
+        run: flutter analyze --no-fatal-infos
+        continue-on-error: true  # Không dừng nếu có warning
+
+      # 7. Build APK Debug
+      - name: Build APK Debug
+        run: flutter build apk --debug
+
+      # 8. Build APK Release (split theo CPU arch)
+      - name: Build APK Release
+        run: flutter build apk --release --split-per-abi
+
+      # 9. Upload APK lên GitHub (tải về được trong 90 ngày)
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: TikDown-debug
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 30
+
+      - name: Upload Release APK (arm64 - khuyên dùng)
+        uses: actions/upload-artifact@v4
+        with:
+          name: TikDown-release-arm64
+          path: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+          retention-days: 90
+
+      - name: Upload Release APK (armeabi - máy cũ 32bit)
+        uses: actions/upload-artifact@v4
+        with:
+          name: TikDown-release-arm32
+          path: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+          retention-days: 90
+
+      # 10. Tạo Release tự động khi push tag (vd: v2.0)
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+            build/app/outputs/flutter-apk/app-debug.apk
+          name: TikDown ${{ github.ref_name }}
+          body: |
+            ## TikDown ${{ github.ref_name }}
+            
+            ### Tai APK:
+            - **arm64-v8a** (điện thoại mới 64-bit) ← Khuyên dùng
+            - **armeabi-v7a** (điện thoại cũ 32-bit)
+            - **debug** (để test)
