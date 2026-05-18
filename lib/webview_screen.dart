@@ -52,7 +52,7 @@ class _WebViewScreenState extends State<WebViewScreen>
       settings: PullToRefreshSettings(
         color: AppTheme.primary,
         backgroundColor: Colors.transparent,
-        attributedTitle: AttributedString('Dang lam moi...'),
+        attributedTitle: AttributedString(text: 'Dang lam moi...'),
       ),
       onRefresh: () async {
         if (await _isOnline()) {
@@ -113,7 +113,7 @@ class _WebViewScreenState extends State<WebViewScreen>
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, _) => _handleBackPress(),
+      onPopInvoked: (didPop) => _handleBackPress(),
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
@@ -455,8 +455,7 @@ class _WebViewScreenState extends State<WebViewScreen>
 
   Future<bool> _isOnline() async {
     final result = await Connectivity().checkConnectivity();
-    return result.isNotEmpty &&
-        !result.contains(ConnectivityResult.none);
+    return result != ConnectivityResult.none;
   }
 
   bool _isOnlineSync() => true; // Optimistic; actual check async
@@ -464,17 +463,16 @@ class _WebViewScreenState extends State<WebViewScreen>
   // ─── Error resolution ──────────────────────────────────────────────────────
 
   String _resolveError(WebResourceErrorType? type) {
-    switch (type) {
-      case WebResourceErrorType.HOST_LOOKUP:
-        return 'Khong tim thay may chu.\nKiem tra ket noi mang.';
-      case WebResourceErrorType.CONNECT:
-        return 'Khong the ket noi toi may chu.\nMay chu co the dang offline.';
-      case WebResourceErrorType.TIMEOUT:
-        return 'Ket noi qua thoi gian cho.\nVui long thu lai.';
-      case WebResourceErrorType.FAILED_SSL_HANDSHAKE:
-        return 'Loi chung chi SSL.\nKhong the ket noi an toan.';
-      default:
-        return 'Khong the tai trang.\nKeo xuong de lam moi hoac nhan Thu lai.';
+    if (type == WebResourceErrorType.HOST_LOOKUP) {
+      return 'Khong tim thay may chu.\nKiem tra ket noi mang.';
+    } else if (type == WebResourceErrorType.CONNECT) {
+      return 'Khong the ket noi toi may chu.\nMay chu co the dang offline.';
+    } else if (type == WebResourceErrorType.TIMEOUT) {
+      return 'Ket noi qua thoi gian cho.\nVui long thu lai.';
+    } else if (type == WebResourceErrorType.FAILED_SSL_HANDSHAKE) {
+      return 'Loi chung chi SSL.\nKhong the ket noi an toan.';
+    } else {
+      return 'Khong the tai trang.\nKeo xuong de lam moi hoac nhan Thu lai.';
     }
   }
 }
