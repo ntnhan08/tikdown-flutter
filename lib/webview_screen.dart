@@ -533,7 +533,7 @@ class _WebViewScreenState extends State<WebViewScreen>
     return type == WebResourceErrorType.CANNOT_CONNECT_TO_HOST ||
         type == WebResourceErrorType.HOST_LOOKUP ||
         type == WebResourceErrorType.FAILED_SSL_HANDSHAKE ||
-        type == WebResourceErrorType.TIMEOUT_CANCELLED;
+        type == WebResourceErrorType.TIMEOUT;
   }
 
   String _resolveError(WebResourceErrorType? type) {
@@ -541,7 +541,7 @@ class _WebViewScreenState extends State<WebViewScreen>
       return 'Không tìm thấy máy chủ.\nKiểm tra kết nối mạng.';
     } else if (type == WebResourceErrorType.CANNOT_CONNECT_TO_HOST) {
       return 'Server đã ngắt kết nối.\nVui long thử lại sau.';
-    } else if (type == WebResourceErrorType.TIMEOUT_CANCELLED) {
+    } else if (type == WebResourceErrorType.TIMEOUT) {
       return 'Kết nối quá thời gian chờ.\nVui lòng thử lại.';
     } else if (type == WebResourceErrorType.FAILED_SSL_HANDSHAKE) {
       return 'Lỗi chứng chỉ SSL.\nKhông thể kết nối an toàn.';
