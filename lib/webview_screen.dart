@@ -180,7 +180,7 @@ class _WebViewScreenState extends State<WebViewScreen>
 
     // Tắt algorithmic darkening để không bị đổi màu theo hệ thống
     algorithmicDarkeningAllowed: false,
-    forceDark: ForceDarkMode.FORCE_DARK_OFF,
+    forceDark: ForceDark.OFF,
 
     // Hiệu năng
     hardwareAcceleration: true,
@@ -190,7 +190,7 @@ class _WebViewScreenState extends State<WebViewScreen>
 
     // Render priority cao
     rendererPriorityPolicy: RendererPriorityPolicy(
-      rendererRequestedPriority: RendererPriority.RENDERER_PRIORITY_BOUND_MAIN_FRAME,
+      rendererRequestedPriority: RendererPriority.RENDERER_PRIORITY_IMPORTANT,
       waivedWhenNotVisible: false,
     ),
 
@@ -529,6 +529,7 @@ class _WebViewScreenState extends State<WebViewScreen>
   }
 
   bool _isServerError(WebResourceErrorType? type) {
+    if (type == null) return false;
     return type == WebResourceErrorType.CONNECT ||
         type == WebResourceErrorType.HOST_LOOKUP ||
         type == WebResourceErrorType.FAILED_SSL_HANDSHAKE ||
@@ -536,17 +537,16 @@ class _WebViewScreenState extends State<WebViewScreen>
   }
 
   String _resolveError(WebResourceErrorType? type) {
-    switch (type) {
-      case WebResourceErrorType.HOST_LOOKUP:
-        return 'Không tìm thấy máy chủ.\nKiểm tra kết nối mạng.';
-      case WebResourceErrorType.CONNECT:
-        return 'Server đã ngắt kết nối.\nVui long thử lại sau.';
-      case WebResourceErrorType.TIMEOUT:
-        return 'Kết nối quá thời gian chờ.\nVui lòng thử lại.';
-      case WebResourceErrorType.FAILED_SSL_HANDSHAKE:
-        return 'Lỗi chứng chỉ SSL.\nKhông thể kết nối an toàn.';
-      default:
-        return 'Không thể tải trang.\nKéo xuống để làm mới hoặc nhấn Thử lại.';
+    if (type == WebResourceErrorType.HOST_LOOKUP) {
+      return 'Không tìm thấy máy chủ.\nKiểm tra kết nối mạng.';
+    } else if (type == WebResourceErrorType.CONNECT) {
+      return 'Server đã ngắt kết nối.\nVui long thử lại sau.';
+    } else if (type == WebResourceErrorType.TIMEOUT) {
+      return 'Kết nối quá thời gian chờ.\nVui lòng thử lại.';
+    } else if (type == WebResourceErrorType.FAILED_SSL_HANDSHAKE) {
+      return 'Lỗi chứng chỉ SSL.\nKhông thể kết nối an toàn.';
+    } else {
+      return 'Không thể tải trang.\nKéo xuống để làm mới hoặc nhấn Thử lại.';
     }
   }
 }
